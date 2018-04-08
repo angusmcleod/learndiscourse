@@ -8,6 +8,8 @@ translations:
     url: 'hi'
 ---
 
+## About
+
 For the time being, the Namati Wiki is manually updated, aided by simple script utilities:
 
 1.  Clone `https://github.com/angusmcleod/namati-wiki`
