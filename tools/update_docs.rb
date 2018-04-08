@@ -1,4 +1,4 @@
-# This script is built to maintain the doc up to date.
+#!/usr/bin/env ruby
 
 require 'multi_json'
 require 'forwardable'
@@ -79,7 +79,7 @@ class MetaDownloadStrategy
     process_url
     begin
       response = Net::HTTP.get(@url)
-      @raw = Net::HTTP.get(URI("https://meta.discourse.org/raw/#{@id}"))
+      @raw = Net::HTTP.get(URI("https://community.namati.org/raw/#{@id}"))
       @json = MultiJson.load(response)
     rescue
       puts "Error parsing: ", response ? response[0..90] : ''
@@ -184,7 +184,7 @@ section: #{name}
   def get_doc(section_name, subsection_name, opts)
     downloader = DocDownloader.new(opts.merge({ 'verbose' => @verbose }))
     uri = URI(opts['url'])
-    downloader.strategy = if uri.host.index('meta.discourse.org')
+    downloader.strategy = if uri.host.index('community.namati.org')
                             MetaDownloadStrategy.new(downloader)
                           elsif uri.host.index('github.com')
                             GitHubDownloadStrategy.new(downloader)

@@ -1,4 +1,4 @@
-# This script is built to maintain the sidebar.
+#!/usr/bin/env ruby
 
 require 'fileutils'
 require 'optparse'
@@ -6,16 +6,16 @@ require 'yaml'
 require 'hamlit'
 require 'uri'
 
-class PostProcesser
-  EXPORT_FOLDER = 'export'
-  SITE_URL = 'http://learndiscourse.org/'
+class PostProcessor
+  EXPORT_FOLDER = 'export'.freeze
+  SITE_URL = 'https://angusmcleod.github.io/namati-wiki/'.freeze
   FILENAME_REGEX =  /\S+\/(\S+)\.md/
-  SPLITTER = '<small class="documentation-source">'
+  SPLITTER = '<small class="documentation-source">'.freeze
 
   def initialize(options = nil)
     @verbose = options[:verbose]
     @yamlfile = options[:yaml] || 'doc_list.yml'
-    @yaml = YAML::load_file(File.join(__dir__, @yamlfile))
+    @yaml = YAML.load_file(File.join(__dir__, @yamlfile))
     @sidebar_template = options[:sidebar_template] || 'sidebar.haml'
     @info = {}
     @url_map = {}
@@ -32,7 +32,7 @@ class PostProcesser
       match = content.match(/Source: \[(\S+)\]/)
       @url_map[match[1]] = slug if match
 
-      meta = YAML::load(content)
+      meta = YAML.safe_load(content)
 
       blob = {
         name: filename.split('.')[0],
@@ -45,7 +45,7 @@ class PostProcesser
     end
     @info.each do |_, sections|
       sections.each do |_, subsection|
-        subsection.sort! { |a,b| b[:weight] <=> a[:weight] }
+        subsection.sort! { |a, b| b[:weight] <=> a[:weight] }
       end
     end
   end
@@ -77,9 +77,9 @@ class PostProcesser
         urls = URI.extract(splits[0]).find_all { |u| u =~ /^https?:/ }.map do |url|
           url.gsub!(/[#)].*$/, '')
 
-          match = url.match(/(https?:\/\/meta.discourse.org\/t\/\S+\/\d+)\/\d/)
+          match = url.match(/(https?:\/\/community.namati.org\/t\/\S+\/\d+)\/\d/)
           url = match[1] if match
-          match = url.match(/(https?:\/\/meta.discourse.org\/t\/\S+\/\d+)\/\d/)
+          match = url.match(/(https?:\/\/community.namati.org\/t\/\S+\/\d+)\/\d/)
           url = match[1] if match
           url
         end
@@ -115,17 +115,16 @@ class PostProcesser
 
     post_process_url
   end
-
 end
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: ruby tools/post_processer.rb [options]"
+  opts.banner = 'Usage: ruby tools/post_processor.rb [options]'
 
   opts.on('-c', '--configuration NAME', 'YAML configuration file') { |v| options[:yaml] = v }
   opts.on('-s', '--sidebar_template TEMPLATE', 'HAML template for sidebar') { |s| option[:sidebar_template] = s }
-  opts.on('-v', '--verbose', 'Vebose mode') { |v| options[:verbose] = true }
+  opts.on('-v', '--verbose', 'Vebose mode') { |_v| options[:verbose] = true }
 end.parse!
 
-$builder = PostProcesser.new(options)
+$builder = PostProcessor.new(options)
 $builder.execute

@@ -2,12 +2,11 @@
 #
 # Use of `relative_permalinks` ensures post links from the index work properly.
 permalink:           pretty
-relative_permalinks: true
 
 # Setup
-title:               Discourse Documentation
+title:               Namati Documentation
 description:         ''
-url:                 http://learndiscourse.org
+url:                 https://angusmcleod.github.io/namati-wiki
 baseurl:             ''
 resources_path:      '/public/resources'
 
@@ -19,7 +18,7 @@ markdown: kramdown
 kramdown:
   input: GFM
 
-gems:
+plugins:
   - jekyll-redirect-from
 
 # Custom vars
@@ -31,9 +30,6 @@ collections:
   en:
     output: true
     permalink: /:name/
-  zh_CN:
-    output: true
-    permalink: /zh_CN/:name/
 
 defaults:
   -
@@ -44,55 +40,14 @@ defaults:
       layout: documentation
       lang: en
 
-  -
-    scope:
-      path: ""
-      type: zh_CN
-    values:
-      layout: documentation
-      lang: zh_CN
-
 t:
   en:
     language: English
     language_title: Language
     home:
-      title: Discourse Documentation
+      title: Namati Documentation
       url: '/'
-      description: Learn how to use, administrate and customise Discourse to your hearts' content.
-    users:
-      title: Users
-      url: '/users/'
-      description: Essential features available to normal users in a community hosted on Discourse.
-    moderators:
-      title: Moderators
-      url: '/moderators/'
-      description: How to use various features for community and forum moderation.
-    administrators:
-      title: Administrators
-      url: '/administrators/'
-      description: How to configuration of various site-wide options for discourse through the admin panel.
-    designers:
-      title: Designers
-      url: '/designers/'
-      description: How to customize the look and feel of discourse with themes, HTML, CSS and JavaScript.
-    sysadmins:
-      title: System Administrators
-      url: '/sysadmins/'
-      description: How to install, maintain and optimize systems to run Discourse.
-    developers:
-      title: Developers
-      url: '/developers/'
-      description: Write plugins, features or fix bugs in Discourse.
+      description: Namati wiki.
     about:
       title: About
       url: '/about/'
-  zh_CN:
-    language: 简体中文
-    language_title: 语言
-    home:
-      title: 主页
-      url: '/zh_CN/'
-    about:
-      title: 关于
-      url: '/zh_CN/about/'
