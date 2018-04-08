@@ -7,7 +7,7 @@ permalink:           pretty
 title:               Namati Documentation
 description:         ''
 url:                 https://angusmcleod.github.io/namati-wiki
-baseurl:             ''
+baseurl:             '/namati-wiki'
 resources_path:      '/public/resources'
 
 sass:
