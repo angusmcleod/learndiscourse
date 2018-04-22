@@ -3,29 +3,9 @@
   background: $main-bg-color;
   color: $main-musthead-color;
 }
-.portal-header.users {
+.portal-header.community {
   background: $portal-users-main-bg-color;
   color: $portal-users-musthead-color;
-}
-.portal-header.moderators {
-  background: $portal-moderators-main-bg-color;
-  color: $portal-moderators-musthead-color;
-}
-.portal-header.administrators {
-  background: $portal-administrators-main-bg-color;
-  color: $portal-administrators-musthead-color;
-}
-.portal-header.designers {
-  background: $portal-designers-main-bg-color;
-  color: $portal-designers-musthead-color;
-}
-.portal-header.sysadmins {
-  background: $portal-sysadmins-main-bg-color;
-  color: $portal-sysadmins-musthead-color;
-}
-.portal-header.developers {
-  background: $portal-developers-main-bg-color;
-  color: $portal-developers-musthead-color;
 }
 
 /* General portal page */

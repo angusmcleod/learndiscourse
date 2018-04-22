@@ -8,7 +8,8 @@ require 'uri'
 
 class PostProcessor
   EXPORT_FOLDER = 'export'.freeze
-  SITE_URL = 'https://angusmcleod.github.io/namati-wiki/'.freeze
+  BASE_URL = '/namati-wiki/'
+  SITE_URL = "https://angusmcleod.github.io#{BASE_URL}".freeze
   FILENAME_REGEX =  /\S+\/(\S+)\.md/
   SPLITTER = '<small class="documentation-source">'.freeze
 
@@ -54,6 +55,7 @@ class PostProcessor
     locals = {
       yaml: @yaml,
       info: @info,
+      base_url: BASE_URL,
       icon: {
         users: 'fa fa-users',
         moderators: 'fa fa-shield',

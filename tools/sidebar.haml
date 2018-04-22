@@ -2,7 +2,7 @@
   - yaml.each do |section_name, subsections|
     %li.section-title(class=section_name)
       %a(id="sidebar-section-#{section_name}"
-         href="/#{section_name}")
+         href="#{base_url}#{section_name}")
         %i(class="#{icon[section_name.to_sym]}")
         = section_name.capitalize
       - subsections.each do |subsection_name, articles|
@@ -10,7 +10,7 @@
           %ul.subsection
             %li.subsection-title
               %a(id="sidebar-#{section_name}-#{subsection_name}"
-                 href="/#{section_name}##{subsection_name}")= subsection_name.capitalize.gsub('-', ' ')
+                 href="#{base_url}#{section_name}##{subsection_name}")= subsection_name.capitalize.gsub('-', ' ')
             - info[section_name][subsection_name].each do |article|
               %li
-                %a(href="/#{article[:name]}")= article[:title]
+                %a(href="#{base_url}#{article[:name]}")= article[:title]

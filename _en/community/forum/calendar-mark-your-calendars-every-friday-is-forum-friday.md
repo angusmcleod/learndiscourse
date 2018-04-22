@@ -20,6 +20,6 @@ Here are some things you can do when you log in:
 
 Have questions? Take a look in the [Frequently Asked Questions](https://community.namati.org/faq) topic. Moderators are standing by to advise you on contributing to and benefitting from the network, including how to use the forum and resource library. We can even go on Skype for hands on training. Just drop @moderators a message to get started. 
 
-<img src='/uploads/default/original/0/b/0b35c6b6c0ba22af636addfe866dce205c07ced1.jpg'>
+<img src='https://community.namati.org/uploads/default/original/0/b/0b35c6b6c0ba22af636addfe866dce205c07ced1.jpg'>
 
 <small class="documentation-source">Source: [https://community.namati.org/t/calendar-mark-your-calendars-every-friday-is-forum-friday/40357](https://community.namati.org/t/calendar-mark-your-calendars-every-friday-is-forum-friday/40357)</small>

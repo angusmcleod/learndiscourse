@@ -42,7 +42,7 @@ class DocDownloader
   end
 end
 
-class MetaDownloadStrategy
+class DiscourseDownloadStrategy
   DISCOURSE_TOPIC_URL_REGEX = /(\/t\/\S+\/\d+)\/(\d+)/
 
   def initialize(downloader)
@@ -64,7 +64,11 @@ class MetaDownloadStrategy
   end
 
   def content
-    @raw
+    @content ||= begin
+      raw = @raw
+      ## ensure html images have the right host
+      raw.gsub!(/\/uploads\/([^>]*)(.jpg|.png)/, "#{@url.scheme}://#{@url.host}/uploads/\\1\\2" )
+    end
   end
 
   def updated_at
@@ -185,7 +189,7 @@ section: #{name}
     downloader = DocDownloader.new(opts.merge({ 'verbose' => @verbose }))
     uri = URI(opts['url'])
     downloader.strategy = if uri.host.index('community.namati.org')
-                            MetaDownloadStrategy.new(downloader)
+                            DiscourseDownloadStrategy.new(downloader)
                           elsif uri.host.index('github.com')
                             GitHubDownloadStrategy.new(downloader)
                           end
@@ -230,7 +234,7 @@ section: #{name}
           !@update # force download all
         genertate_doc_file doc, filename, section_name, subsection_name
       else
-        puts "                 [SKIPED] Original doc updated at: #{doc.updated_at} < #{original_file_mtime}"
+        puts "[SKIPED] Original doc updated at: #{doc.updated_at} < #{original_file_mtime}"
       end
     end
   end
@@ -282,7 +286,7 @@ end
 
 options = {}
 OptionParser.new do |opts|
-  opts.banner = "Usage: ruby tools/doc_section_maintainer.rb [options]"
+  opts.banner = "Usage: ruby tools/update_docs.rb [options]"
 
   opts.on('-c', '--configuration NAME', 'YAML configuration file') { |v| options[:yaml] = v }
   opts.on('-u', '--update', "Only update newer documentation") { |v| options[:update] = true }
