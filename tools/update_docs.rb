@@ -45,10 +45,11 @@ end
 class DiscourseDownloadStrategy
   DISCOURSE_TOPIC_URL_REGEX = /(\/t\/\S+\/\d+)\/(\d+)/
 
-  def initialize(downloader)
+  def initialize(downloader, params)
     @url = URI(downloader.original_url)
     @json = nil
     @raw = nil
+    @params = params
   end
 
   def url
@@ -68,6 +69,8 @@ class DiscourseDownloadStrategy
       raw = @raw
       ## ensure html images have the right host
       raw.gsub!(/\/uploads\/([^>]*)(.jpg|.png)/, "#{@url.scheme}://#{@url.host}/uploads/\\1\\2" )
+
+      raw
     end
   end
 
@@ -81,14 +84,8 @@ class DiscourseDownloadStrategy
 
   def get_json
     process_url
-    begin
-      response = Net::HTTP.get(@url)
-      @raw = Net::HTTP.get(URI("https://community.namati.org/raw/#{@id}"))
-      @json = MultiJson.load(response)
-    rescue
-      puts "Error parsing: ", response ? response[0..90] : ''
-      nil
-    end
+    @json = MultiJson.load(perform_get(@url))
+    @raw = perform_get(URI("https://community.namati.org/raw/#{@id}"))
   end
 
   def process_url
@@ -99,6 +96,21 @@ class DiscourseDownloadStrategy
     end
     @id = @url.path.gsub(/\/t\/\S+\/(\d+)/, '\1')
     @url.path += '.json'
+  end
+
+  def perform_get(url)
+    api_params = { api_username: @params[:api_user], api_key: @params[:api_key] }
+    url.query = URI.encode_www_form URI.decode_www_form(url.query || '').concat(api_params.to_a)
+
+    request = Net::HTTP::Get.new(url)
+
+    Net::HTTP.start(url.host, '80') do |http|
+      r = http.request(request)
+      if r.code == '301'
+        r = Net::HTTP.get_response(URI.parse(r.header['location']))
+      end
+      r.body
+    end
   end
 end
 
@@ -166,6 +178,8 @@ class DocSectionMaintainer
     @update = options[:update]
     @yamlfile = options[:yaml] || 'doc_list.yml'
     @yaml = YAML::load_file(File.join(__dir__, @yamlfile))
+    @api_user = options[:user]
+    @api_key = options[:key]
   end
 
   def create_portal_page(name)
@@ -189,7 +203,10 @@ section: #{name}
     downloader = DocDownloader.new(opts.merge({ 'verbose' => @verbose }))
     uri = URI(opts['url'])
     downloader.strategy = if uri.host.index('community.namati.org')
-                            DiscourseDownloadStrategy.new(downloader)
+                            DiscourseDownloadStrategy.new(downloader,
+                              api_user: @api_user,
+                              api_key: @api_key
+                            )
                           elsif uri.host.index('github.com')
                             GitHubDownloadStrategy.new(downloader)
                           end
@@ -289,8 +306,10 @@ OptionParser.new do |opts|
   opts.banner = "Usage: ruby tools/update_docs.rb [options]"
 
   opts.on('-c', '--configuration NAME', 'YAML configuration file') { |v| options[:yaml] = v }
-  opts.on('-u', '--update', "Only update newer documentation") { |v| options[:update] = true }
+  opts.on('-n', '--new', "Only update newer documentation") { |v| options[:update] = true }
   opts.on('-v', '--verbose', 'Vebose mode') { |v| options[:verbose] = true }
+  opts.on('-u', '--user USERNAME', "api user") { |v| options[:user] = v }
+  opts.on('-k', '--key KEY', "api key") { |v| options[:key] = v }
 end.parse!
 
 $maintainer = DocSectionMaintainer.new(options)

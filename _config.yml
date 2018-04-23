@@ -51,7 +51,11 @@ t:
     about:
       title: About
       url: '/about/'
-    community:
-      title: Community
-      url: '/community/'
-      description: Stuff about community.
+    knowledgebase:
+      title: Knowledge Base
+      url: '/knowledgebase/'
+      description: Knowledge Base Description.
+    membersupport:
+      title: Member Support
+      url: '/membersupport/'
+      description: Member Support Description.
